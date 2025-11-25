@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backyard Adventures - Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .auth-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .auth-btn.login {
+            background: transparent;
+            color: #2b7a78;
+            border-color: #2b7a78;
+        }
+        
+        .auth-btn.login:hover {
+            background: #2b7a78;
+            color: white;
+            /* End of Selection */
+        }
+        
+        .auth-btn.signup {
+            background: linear-gradient(135deg, #2b7a78, #3a9b98);
+            color: white;
+        }
+        
+        .auth-btn.signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(8, 218, 26, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: #2b7a78;
+        }
+        
+        .logo h1 {
+            color: #2b7a78;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav a:hover, .nav a.active {
+            background: #2b7a78;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header i {
+            font-size: 2rem;
+            color: #2b7a78;
+        }
+        
+        .card-header h3 {
+            color: #2b7a78;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #2b7a78, #3a9b98);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2b7a78;
+            background: white;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #2b7a78, #3a9b98);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(43, 122, 120, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #868e96);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+        }
+        
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2b7a78;
+        }
+        
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status.confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            color: #2b7a78;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close:hover {
+            color: #2b7a78;
+        }
+        
+        .modal .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .modal .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .modal .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .modal .form-group input:focus {
+            outline: none;
+            border-color: #2b7a78;
+            background: white;
+        }
+        
+        .modal .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .auth-buttons {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .auth-btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <script>
+        const API_BASE = window.location.origin.startsWith('file') ? 'http://localhost:3000' : window.location.origin;
+
+        let reservations = [];
+        let customers = [];
+        let currentView = 'dashboard';
+
+        function getReservationForm() {
+            return document.getElementById('reservationForm');
+        }
+
+        function getCustomerForm() {
+            return document.getElementById('customerForm');
+        }
+
+        function formatCurrency(amount) {
+            try {
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(amount) || 0);
+            } catch (error) {
+                return `$${Number(amount || 0).toFixed(2)}`;
+            }
+        }
+
+        async function fetchJSON(url, options = {}) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    const errorBody = await response.json().catch(() => ({}));
+                    const message = errorBody.message || `Request failed with status ${response.status}`;
+                    throw new Error(message);
+                }
+
+                if (response.status === 204) {
+                    return null;
+                }
+
+                return response.json();
+            } catch (error) {
+                console.error('API error:', error);
+                showAlert(error.message || 'Something went wrong. Please try again.', 'error');
+                throw error;
+            }
+        }
+
+        function resetReservationForm() {
+            const form = getReservationForm();
+            if (!form) return;
+
+            delete form.dataset.mode;
+            delete form.dataset.editingId;
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.textContent = 'Add Reservation';
+            }
+        }
+
+        function resetCustomerForm() {
+            const form = getCustomerForm();
+            if (!form) return;
+
+            delete form.dataset.mode;
+            delete form.dataset.editingId;
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.textContent = 'Add Customer';
+            }
+        }
+
+        async function showView(view, evt) {
+            if (evt?.preventDefault) {
+                evt.preventDefault();
+            }
+
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            const targetView = document.getElementById(view);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('.nav a').forEach(link => link.classList.remove('active'));
+            const navLink = document.querySelector(`.nav a[data-view="${view}"]`);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+
+            currentView = view;
+
+            try {
+                if (view === 'reservations') {
+                    await loadReservations();
+                } else if (view === 'customers') {
+                    await loadCustomers();
+                } else if (view === 'analytics') {
+                    await loadAnalytics();
+                }
+            } catch (error) {
+                console.error(`Failed to switch to view ${view}`, error);
+            }
+        }
+
+        async function loadReservations() {
+            try {
+                const data = await fetchJSON(`${API_BASE}/api/reservations`);
+                reservations = Array.isArray(data) ? data : [];
+
+                const tbody = document.querySelector('#reservationsTable tbody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                reservations.forEach(reservation => {
+                    const row = document.createElement('tr');
+                    const status = reservation.status || 'pending';
+                    const statusClass = `status ${status.toLowerCase()}`;
+                    const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+                    row.innerHTML = `
+                        <td>${reservation.customer || ''}</td>
+                        <td>${reservation.activity || ''}</td>
+                        <td>${reservation.date || ''}</td>
+                        <td>${reservation.time || ''}</td>
+                        <td>${reservation.guide || ''}</td>
+                        <td><span class="${statusClass}">${statusLabel}</span></td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="editReservation(${reservation.id})">Edit</button>
+                            <button class="btn btn-danger" onclick="cancelReservation(${reservation.id})">Cancel</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Failed to load reservations:', error);
+            }
+        }
+
+        async function loadCustomers() {
+            try {
+                const data = await fetchJSON(`${API_BASE}/api/customers`);
+                customers = Array.isArray(data) ? data : [];
+
+                const tbody = document.querySelector('#customersTable tbody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                customers.forEach(customer => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${customer.name || ''}</td>
+                        <td>${customer.email || ''}</td>
+                        <td>${customer.phone || ''}</td>
+                        <td>${customer.totalBookings ?? 0}</td>
+                        <td>${customer.lastVisit || ''}</td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="editCustomer(${customer.id})">Edit</button>
+                            <button class="btn" onclick="viewCustomerHistory(${customer.id})">History</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Failed to load customers:', error);
+            }
+        }
+
+        async function loadAnalytics() {
+            try {
+                const data = await fetchJSON(`${API_BASE}/api/analytics`);
+                document.getElementById('totalReservations').textContent = data?.totalReservations ?? 0;
+                document.getElementById('totalRevenue').textContent = formatCurrency(data?.totalRevenue ?? 0);
+                document.getElementById('activeCustomers').textContent = data?.activeCustomers ?? 0;
+                document.getElementById('occupancyRate').textContent = `${data?.occupancyRate ?? 0}%`;
+            } catch (error) {
+                console.error('Failed to load analytics:', error);
+            }
+        }
+
+        async function addReservation() {
+            const form = getReservationForm();
+            if (!form) return;
+
+            const formData = new FormData(form);
+            const payload = {
+                customer: formData.get('customerName'),
+                activity: formData.get('activity'),
+                date: formData.get('date'),
+                time: formData.get('time'),
+                guide: formData.get('guide'),
+                notes: formData.get('notes') || ''
+            };
+
+            if (!payload.customer || !payload.activity || !payload.date || !payload.time || !payload.guide) {
+                showAlert('Please fill in all required fields.', 'error');
+                return;
+            }
+
+            if (form.dataset.mode === 'edit' && form.dataset.editingId) {
+                await updateReservation(Number(form.dataset.editingId), payload);
+                return;
+            }
+
+            try {
+                await fetchJSON(`${API_BASE}/api/reservations`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showAlert('Reservation added successfully!', 'success');
+                form.reset();
+                await loadReservations();
+                await loadAnalytics();
+            } catch (error) {
+                console.error('Failed to add reservation:', error);
+            } finally {
+                resetReservationForm();
+            }
+        }
+
+        async function updateReservation(id, payload) {
+            const existing = reservations.find(r => r.id === id);
+            if (existing && !payload.status) {
+                payload.status = existing.status;
+            }
+
+            try {
+                await fetchJSON(`${API_BASE}/api/reservations/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showAlert('Reservation updated successfully!', 'success');
+                const form = getReservationForm();
+                if (form) {
+                    form.reset();
+                }
+                resetReservationForm();
+                await loadReservations();
+                await loadAnalytics();
+            } catch (error) {
+                console.error('Failed to update reservation:', error);
+            }
+        }
+
+        async function cancelReservation(id) {
+            if (!confirm('Are you sure you want to cancel this reservation?')) {
+                return;
+            }
+
+            try {
+                await fetchJSON(`${API_BASE}/api/reservations/${id}`, {
+                    method: 'DELETE'
+                });
+
+                showAlert('Reservation cancelled successfully!', 'success');
+                await loadReservations();
+                await loadAnalytics();
+            } catch (error) {
+                console.error('Failed to cancel reservation:', error);
+            }
+        }
+
+        async function addCustomer() {
+            const form = getCustomerForm();
+            if (!form) return;
+
+            const formData = new FormData(form);
+            const payload = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                address: formData.get('address') || ''
+            };
+
+            if (!payload.name || !payload.email || !payload.phone) {
+                showAlert('Please fill in all required fields.', 'error');
+                return;
+            }
+
+            if (form.dataset.mode === 'edit' && form.dataset.editingId) {
+                await updateCustomer(Number(form.dataset.editingId), payload);
+                return;
+            }
+
+            try {
+                await fetchJSON(`${API_BASE}/api/customers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showAlert('Customer added successfully!', 'success');
+                form.reset();
+                await loadCustomers();
+                await loadAnalytics();
+            } catch (error) {
+                console.error('Failed to add customer:', error);
+            } finally {
+                resetCustomerForm();
+            }
+        }
+
+        async function updateCustomer(id, payload) {
+            const existing = customers.find(c => c.id === id);
+            if (existing) {
+                payload.totalBookings = existing.totalBookings;
+                payload.lastVisit = existing.lastVisit;
+            }
+
+            try {
+                await fetchJSON(`${API_BASE}/api/customers/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showAlert('Customer updated successfully!', 'success');
+                const form = getCustomerForm();
+                if (form) {
+                    form.reset();
+                }
+                resetCustomerForm();
+                await loadCustomers();
+                await loadAnalytics();
+            } catch (error) {
+                console.error('Failed to update customer:', error);
+            }
+        }
+
+        function editReservation(id) {
+            const reservation = reservations.find(r => r.id === id);
+            if (!reservation) {
+                showAlert('Reservation not found.', 'error');
+                return;
+            }
+
+            const form = getReservationForm();
+            if (!form) return;
+
+            document.getElementById('customerName').value = reservation.customer || '';
+            document.getElementById('activity').value = reservation.activity || '';
+            document.getElementById('date').value = reservation.date || '';
+            document.getElementById('time').value = reservation.time || '';
+            document.getElementById('guide').value = reservation.guide || '';
+            document.getElementById('notes').value = reservation.notes || '';
+
+            form.dataset.mode = 'edit';
+            form.dataset.editingId = id;
+
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.textContent = 'Update Reservation';
+            }
+
+            document.getElementById('reservations').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) {
+                showAlert('Customer not found.', 'error');
+                return;
+            }
+
+            const form = getCustomerForm();
+            if (!form) return;
+
+            document.getElementById('newCustomerName').value = customer.name || '';
+            document.getElementById('newCustomerEmail').value = customer.email || '';
+            document.getElementById('newCustomerPhone').value = customer.phone || '';
+            document.getElementById('newCustomerAddress').value = customer.address || '';
+
+            form.dataset.mode = 'edit';
+            form.dataset.editingId = id;
+
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.textContent = 'Update Customer';
+            }
+
+            document.getElementById('customers').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function addLineBreaks(text) {
+            return text.split('\n').map(line => line.trim()).filter(Boolean).join('\n');
+        }
+
+        function viewCustomerHistory(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) {
+                showAlert('Customer not found.', 'error');
+                return;
+            }
+
+            const customerReservations = reservations.filter(r => r.customer === customer.name);
+            const history = customerReservations.map(r => `- ${r.activity || 'Activity'} on ${r.date || 'Date'} at ${r.time || 'Time'}`).join('\n');
+            const details = addLineBreaks(`Customer History for ${customer.name}:
+
+Total Bookings: ${customer.totalBookings ?? 0}
+Last Visit: ${customer.lastVisit || 'N/A'}
+
+Recent Reservations:
+${history || 'No recent reservations.'}`);
+
+            alert(details);
+        }
+
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function showSignupModal() {
+            document.getElementById('signupModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const payload = {
+                email: formData.get('loginEmail'),
+                password: formData.get('loginPassword')
+            };
+
+            if (!payload.email || !payload.password) {
+                showAlert('Please fill in all fields.', 'error');
+                return;
+            }
+
+            try {
+                await fetchJSON(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showAlert('Login successful! Welcome to Backyard Adventures.', 'success');
+                closeModal('loginModal');
+                event.target.reset();
+            } catch (error) {
+                console.error('Login failed:', error);
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const payload = {
+                name: formData.get('signupName'),
+                email: formData.get('signupEmail'),
+                password: formData.get('signupPassword')
+            };
+
+            if (!payload.name || !payload.email || !payload.password) {
+                showAlert('Please fill in all fields.', 'error');
+                return;
+            }
+
+            try {
+                await fetchJSON(`${API_BASE}/api/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showAlert('Account created successfully! Welcome to Backyard Adventures.', 'success');
+                closeModal('signupModal');
+                event.target.reset();
+            } catch (error) {
+                console.error('Signup failed:', error);
+            }
+        }
+
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+
+            const container = document.querySelector('.container');
+            container.insertBefore(alert, container.firstChild);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+
+            if (event.target === loginModal) {
+                closeModal('loginModal');
+            }
+            if (event.target === signupModal) {
+                closeModal('signupModal');
+            }
+        }
+
+        async function initializeDashboard() {
+            resetReservationForm();
+            resetCustomerForm();
+
+            try {
+                await Promise.all([loadReservations(), loadCustomers()]);
+                await loadAnalytics();
+            } catch (error) {
+                console.error('Initialization failed:', error);
+            }
+        }
+
+        // Initialize dashboard on load
+        window.onload = function() {
+            initializeDashboard();
+        }
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-anchor"></i>
+                <h1>Backyard Adventures</h1>
+            </div>
+            <nav>
+                <ul class="nav">
+                    <li><a href="#" class="active" data-view="dashboard" onclick="showView('dashboard', event)">Dashboard</a></li>
+                    <li><a href="#" data-view="reservations" onclick="showView('reservations', event)">Reservations</a></li>
+                    <li><a href="#" data-view="customers" onclick="showView('customers', event)">Customers</a></li>
+                    <li><a href="#" data-view="analytics" onclick="showView('analytics', event)">Analytics</a></li>
+                    <li><a href="#" data-view="settings" onclick="showView('settings', event)">Settings</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <a href="#" class="auth-btn login" onclick="showLoginModal()">
+                    <i class="fas fa-sign-in-alt"></i> Log In
+                </a>
+                <a href="#" class="auth-btn signup" onclick="showSignupModal()">
+                    <i class="fas fa-user-plus"></i> Sign Up
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard View -->
+        <div id="dashboard" class="view">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalReservations">0</div>
+                    <div class="stat-label">Total Reservations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRevenue">$0</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeCustomers">0</div>
+                    <div class="stat-label">Active Customers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="occupancyRate">0%</div>
+                    <div class="stat-label">Occupancy Rate</div>
+                </div>
+            </div>
+
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <p>Manage your business operations efficiently</p>
+                    <button class="btn" onclick="showView('reservations', event)">New Reservation</button>
+                    <button class="btn btn-secondary" onclick="showView('customers', event)">View Customers</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Business Insights</h3>
+                    </div>
+                    <p>Track performance and identify opportunities</p>
+                    <button class="btn" onclick="showView('analytics', event)">View Analytics</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-users"></i>
+                        <h3>Customer Management</h3>
+                    </div>
+                    <p>Build relationships and track customer history</p>
+                    <button class="btn" onclick="showView('customers', event)">Manage Customers</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reservations View -->
+        <div id="reservations" class="view hidden">
+            <div class="form-section">
+                <h2><i class="fas fa-plus-circle"></i> Add New Reservation</h2>
+                <form id="reservationForm" onsubmit="event.preventDefault(); addReservation();">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="customerName">Customer Name</label>
+                            <input type="text" id="customerName" name="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="activity">Activity</label>
+                            <select id="activity" name="activity" required>
+                                <option value="">Select Activity</option>
+                                <option value="Kayak Tour">Kayak Tour</option>
+                                <option value="Jet Ski Rental">Jet Ski Rental</option>
+                                <option value="Fishing Charter">Fishing Charter</option>
+                                <option value="Boat Rental">Boat Rental</option>
+                                <option value="Snorkeling Tour">Snorkeling Tour</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">Time</label>
+                            <input type="time" id="time" name="time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guide">Guide</label>
+                            <select id="guide" name="guide" required>
+                                <option value="">Select Guide</option>
+                                <option value="Harry Weaver">Harry Weaver</option>
+                                <option value="Shawn Weaver">Shawn Weaver</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Notes</label>
+                            <textarea id="notes" name="notes" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Add Reservation</button>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <h2><i class="fas fa-list"></i> Current Reservations</h2>
+                <table id="reservationsTable">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Activity</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Guide</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Reservations will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Customers View -->
+        <div id="customers" class="view hidden">
+            <div class="form-section">
+                <h2><i class="fas fa-user-plus"></i> Add New Customer</h2>
+                <form id="customerForm" onsubmit="event.preventDefault(); addCustomer();">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="newCustomerName">Full Name</label>
+                            <input type="text" id="newCustomerName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newCustomerEmail">Email</label>
+                            <input type="email" id="newCustomerEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newCustomerPhone">Phone</label>
+                            <input type="tel" id="newCustomerPhone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newCustomerAddress">Address</label>
+                            <textarea id="newCustomerAddress" name="address" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Add Customer</button>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <h2><i class="fas fa-users"></i> Customer Database</h2>
+                <table id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Total Bookings</th>
+                            <th>Last Visit</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Customers will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics View -->
+        <div id="analytics" class="view hidden">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Revenue Analysis</h3>
+                    </div>
+                    <p>Track revenue trends and identify peak periods</p>
+                    <div style="height: 200px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
+                        Revenue Chart Placeholder
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Booking Patterns</h3>
+                    </div>
+                    <p>Analyze when customers book most frequently</p>
+                    <div style="height: 200px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
+                        Booking Chart Placeholder
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-star"></i>
+                        <h3>Customer Satisfaction</h3>
+                    </div>
+                    <p>Monitor customer feedback and ratings</p>
+                    <div style="height: 200px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
+                        Satisfaction Chart Placeholder
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-bullseye"></i>
+                        <h3>Marketing Effectiveness</h3>
+                    </div>
+                    <p>Track which marketing channels bring the most customers</p>
+                    <div style="height: 200px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
+                        Marketing Chart Placeholder
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settings" class="view hidden">
+            <div class="form-section">
+                <h2><i class="fas fa-cog"></i> System Settings</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text" id="companyName" value="Backyard Adventures" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" value="Jacksonville, Florida" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Contact Email</label>
+                        <input type="email" id="contactEmail" value="info@backyardadventures.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Contact Phone</label>
+                        <input type="tel" id="contactPhone" value="(904) 555-0123">
+                    </div>
+                </div>
+                <button class="btn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Log In</h2>
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Log In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Sign Up</h2>
+                <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            </div>
+            <form onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" name="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" name="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" name="signupPassword" required>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
