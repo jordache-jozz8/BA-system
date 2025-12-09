@@ -920,7 +920,8 @@ ${history || 'No recent reservations.'}`);
 
         function handleResetPassword(event) {
             event.preventDefault();
-            showAlert('If the email exists, a reset link will be sent.', 'success');
+            const username = document.getElementById('resetPwdUsername').value;
+            showAlert(`Password reset for user ${username} was successful (demo).`, 'success');
             closeModal('resetPwdModal');
             event.target.reset();
         }
@@ -1306,10 +1307,14 @@ ${history || 'No recent reservations.'}`);
             </div>
             <form onsubmit="handleResetPassword(event)">
                 <div class="form-group">
-                    <label for="resetPwdEmail">Email</label>
-                    <input type="email" id="resetPwdEmail" name="resetPwdEmail" required>
+                    <label for="resetPwdUsername">Username</label>
+                    <input type="text" id="resetPwdUsername" name="resetPwdUsername" required>
                 </div>
-                <button type="submit" class="btn">Send Reset Link</button>
+                <div class="form-group">
+                    <label for="resetPwdNewPassword">New Password</label>
+                    <input type="password" id="resetPwdNewPassword" name="resetPwdNewPassword" required>
+                </div>
+                <button type="submit" class="btn">Reset Password</button>
                 <button type="button" class="btn" style="background:#eee;color:#207178;margin-left:1rem" onclick="closeModal('resetPwdModal')">Cancel</button>
             </form>
         </div>
