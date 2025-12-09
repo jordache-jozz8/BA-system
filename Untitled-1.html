@@ -918,6 +918,13 @@ ${history || 'No recent reservations.'}`);
             }
         }
 
+        function handleResetPassword(event) {
+            event.preventDefault();
+            showAlert('If the email exists, a reset link will be sent.', 'success');
+            closeModal('resetPwdModal');
+            event.target.reset();
+        }
+
         function showAlert(message, type) {
             const alert = document.createElement('div');
             alert.className = `alert alert-${type}`;
@@ -935,12 +942,16 @@ ${history || 'No recent reservations.'}`);
         window.onclick = function(event) {
             const loginModal = document.getElementById('loginModal');
             const signupModal = document.getElementById('signupModal');
+            const resetPwdModal = document.getElementById('resetPwdModal');
 
             if (event.target === loginModal) {
                 closeModal('loginModal');
             }
             if (event.target === signupModal) {
                 closeModal('signupModal');
+            }
+            if (event.target === resetPwdModal) {
+                closeModal('resetPwdModal');
             }
         }
 
@@ -960,6 +971,11 @@ ${history || 'No recent reservations.'}`);
         window.onload = function() {
             initializeDashboard();
         }
+
+        document.getElementById('forgotPwdSignup').onclick = function(event) {
+            event.preventDefault();
+            document.getElementById('resetPwdModal').style.display = 'block';
+        };
     </script>
 </head>
 <body>
@@ -1277,6 +1293,24 @@ ${history || 'No recent reservations.'}`);
                 <div style="margin-top: 1rem; text-align: center;">
                     <a href="#" id="forgotPwdSignup" style="color: #2b7a78; text-decoration: underline; font-size: 0.95em;">Forgot Password?</a>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="resetPwdModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-unlock-alt"></i> Reset Password</h2>
+                <span class="close" onclick="closeModal('resetPwdModal')">&times;</span>
+            </div>
+            <form onsubmit="handleResetPassword(event)">
+                <div class="form-group">
+                    <label for="resetPwdEmail">Email</label>
+                    <input type="email" id="resetPwdEmail" name="resetPwdEmail" required>
+                </div>
+                <button type="submit" class="btn">Send Reset Link</button>
+                <button type="button" class="btn" style="background:#eee;color:#207178;margin-left:1rem" onclick="closeModal('resetPwdModal')">Cancel</button>
             </form>
         </div>
     </div>
