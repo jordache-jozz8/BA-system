@@ -971,11 +971,14 @@ ${history || 'No recent reservations.'}`);
         // Initialize dashboard on load
         window.onload = function() {
             initializeDashboard();
-        }
-
-        document.getElementById('forgotPwdSignup').onclick = function(event) {
-            event.preventDefault();
-            document.getElementById('resetPwdModal').style.display = 'block';
+            // Attach reset-password modal open handler here
+            var forgotPwdLink = document.getElementById('forgotPwdSignup');
+            if (forgotPwdLink) {
+                forgotPwdLink.onclick = function(event) {
+                    event.preventDefault();
+                    document.getElementById('resetPwdModal').style.display = 'block';
+                };
+            }
         };
     </script>
 </head>
